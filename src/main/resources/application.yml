@@ -1,0 +1,8 @@
+spring:
+  profiles:
+    default: ${APPLICATION_PROFILE}
+  application:
+    title: SPRING-ACCOUNT
+    version: 1.0.1
+  banner:
+    location: classpath:/app-banner.dat
