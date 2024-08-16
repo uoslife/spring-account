@@ -12,20 +12,31 @@ import java.time.Instant
 import java.util.*
 
 class JwtProvider(private val secretKey: String) {
-
-    @Throws(Exception::class)
-    fun generateAccessToken(claims: Map<String, Any>, expirationTime: Duration?): String {
-        return generateToken(claims, expirationTime, SCOPE_ACCESS)
+    companion object{
+        const val ISSUER_PREFIX = "uoslife/account"
+        const val SCOPE_ACCESS: String = "access_token"
+        const val SCOPE_REFRESH: String = "refresh_token"
+        const val SCOPE_REGISTER: String = "register_token"
     }
 
     @Throws(Exception::class)
-    fun generateRefreshToken(expirationTime: Duration?): String {
-        return generateToken(emptyMap(), expirationTime, SCOPE_REFRESH)
+    fun generateAccessToken(sub:String, expirationTime: Duration?): String {
+        return generateToken(sub, expirationTime, SCOPE_ACCESS)
+    }
+
+    @Throws(Exception::class)
+    fun generateRefreshToken(sub:String, expirationTime: Duration?): String {
+        return generateToken(sub, expirationTime, SCOPE_REFRESH)
+    }
+
+    @Throws(Exception::class)
+    fun generateRegisterToken(sub:String, expirationTime: Duration?):String{
+        return generateToken(sub, expirationTime, SCOPE_REGISTER)
     }
 
     @Throws(Exception::class)
     private fun generateToken(
-        claims: Map<String, Any>,
+        subClaim:String,
         expirationTime: Duration?,
         jti: String
     ): String {
@@ -33,9 +44,6 @@ class JwtProvider(private val secretKey: String) {
 
         val builder = JWTClaimsSet.Builder()
 
-        for (key in claims.keys) {
-            builder.claim(key, claims[key])
-        }
 
         val claimsSet =
             builder
@@ -44,7 +52,9 @@ class JwtProvider(private val secretKey: String) {
                     else Date.from(Instant.now().plus(expirationTime))
                 )
                 .issueTime(Date())
-                .claim("scp", jti)
+                .claim("iss", ISSUER_PREFIX)
+                .claim("aud", "$ISSUER_PREFIX/$jti")
+                .claim("sub", subClaim)
                 .build()
         val signedJWT =
             SignedJWT(
@@ -54,10 +64,5 @@ class JwtProvider(private val secretKey: String) {
         signedJWT.sign(signer)
 
         return signedJWT.serialize()
-    }
-
-    companion object {
-        const val SCOPE_ACCESS: String = "acc"
-        const val SCOPE_REFRESH: String = "ref"
     }
 }
