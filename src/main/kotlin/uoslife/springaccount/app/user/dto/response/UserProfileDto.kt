@@ -1,5 +1,7 @@
 package uoslife.springaccount.app.user.dto.response
 
+import uoslife.springaccount.app.verification.domain.entity.VerificationMethod
+
 class UserProfileDto {
 
     data class UserRealm(
@@ -34,5 +36,6 @@ class UserProfileDto {
         val moderator: UserProfileModerator?,
         val isLinkedPortal: Boolean,
         val isVerified: Boolean,
+        val verificationMethod: VerificationMethod?,
     )
 }
