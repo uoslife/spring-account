@@ -12,26 +12,21 @@ import java.time.Instant
 import java.util.*
 
 class JwtProvider(private val secretKey: String) {
-    companion object{
-        const val ISSUER_PREFIX = "uoslife/account"
-        const val SCOPE_ACCESS: String = "access_token"
-        const val SCOPE_REFRESH: String = "refresh_token"
-        const val SCOPE_REGISTER: String = "register_token"
-    }
+
 
     @Throws(Exception::class)
     fun generateAccessToken(sub:String, expirationTime: Duration?): String {
-        return generateToken(sub, expirationTime, SCOPE_ACCESS)
+        return generateToken(sub, expirationTime, JwtConfig.SCOPE_ACCESS)
     }
 
     @Throws(Exception::class)
     fun generateRefreshToken(sub:String, expirationTime: Duration?): String {
-        return generateToken(sub, expirationTime, SCOPE_REFRESH)
+        return generateToken(sub, expirationTime, JwtConfig.SCOPE_REFRESH)
     }
 
     @Throws(Exception::class)
     fun generateRegisterToken(sub:String, expirationTime: Duration?):String{
-        return generateToken(sub, expirationTime, SCOPE_REGISTER)
+        return generateToken(sub, expirationTime, JwtConfig.SCOPE_REGISTER)
     }
 
     @Throws(Exception::class)
@@ -52,8 +47,8 @@ class JwtProvider(private val secretKey: String) {
                     else Date.from(Instant.now().plus(expirationTime))
                 )
                 .issueTime(Date())
-                .claim("iss", ISSUER_PREFIX)
-                .claim("aud", "$ISSUER_PREFIX/$jti")
+                .claim("iss", JwtConfig.ISSUER_PREFIX)
+                .claim("aud", "${JwtConfig.ISSUER_PREFIX}/$jti")
                 .claim("sub", subClaim)
                 .build()
         val signedJWT =
