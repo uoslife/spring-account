@@ -6,3 +6,8 @@ spring:
     version: 1.0.1
   banner:
     location: classpath:/app-banner.dat
+
+security:
+  jwt:
+    secret:
+      ${JWT_ACCESS_SECRET}
