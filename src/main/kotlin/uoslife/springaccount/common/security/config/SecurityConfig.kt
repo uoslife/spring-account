@@ -12,9 +12,9 @@ import org.springframework.security.oauth2.jose.jws.MacAlgorithm
 import org.springframework.security.oauth2.jwt.JwtDecoder
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder
 import org.springframework.security.web.SecurityFilterChain
-import uoslife.springaccount.common.security.authentication.CustomJwtAuthenticationConverter
 import uoslife.springaccount.common.security.authentication.JwtAccessDeniedHandler
 import uoslife.springaccount.common.security.authentication.JwtEntryPoint
+import uoslife.springaccount.common.security.authentication.SimpleJwtAuthenticationConverter
 import uoslife.springaccount.common.security.jwt.JwtProvider
 
 @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)
@@ -27,10 +27,11 @@ class SecurityConfig(
     @Bean
     fun jwtChain(
         httpSecurity: HttpSecurity,
-        customJwtAuthenticationConverter: CustomJwtAuthenticationConverter
+        simpleJwtAuthenticationConverter: SimpleJwtAuthenticationConverter
     ): SecurityFilterChain {
         httpSecurity.invoke {
             csrf{disable()}
+            logout{disable()}
             authorizeRequests {
                 authorize("/v2/auth/**", permitAll)
                 authorize("/v2/users", hasRole("REGISTER"))
@@ -39,7 +40,7 @@ class SecurityConfig(
             oauth2ResourceServer {
                 accessDeniedHandler = JwtAccessDeniedHandler()
                 authenticationEntryPoint = JwtEntryPoint()
-                jwt { jwtAuthenticationConverter = customJwtAuthenticationConverter }
+                jwt { jwtAuthenticationConverter = simpleJwtAuthenticationConverter }
             }
         }
         return httpSecurity.build()
