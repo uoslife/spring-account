@@ -1,5 +1,7 @@
 package uoslife.springaccount.app.auth.service
 
+import org.redisson.api.RBucket
+import org.redisson.api.RedissonClient
 import org.slf4j.LoggerFactory
 import org.springframework.data.redis.core.RedisTemplate
 import org.springframework.stereotype.Service
@@ -18,7 +20,7 @@ import java.util.concurrent.TimeUnit
 
 @Service
 class AuthService (
-    private val redisTemplate: RedisTemplate<String, Any>,
+    private val redisClient: RedissonClient,
     private val jwtService: JwtService,
 ){
     companion object {
@@ -47,8 +49,8 @@ class AuthService (
         val effectiveSeconds = AuthConfig.PHONE_AUTH_SESSION_TTL
         val expiresAt = LocalDateTime.now().plusSeconds(effectiveSeconds)
 
-        val ops = redisTemplate.opsForValue()
-        ops.set(getSessionCache(phoneNumber), code, effectiveSeconds, TimeUnit.SECONDS) //Key, Value, TTL
+        val bucket:RBucket<String> = redisClient.getBucket(getSessionCache(phoneNumber))
+        bucket.set(code, effectiveSeconds, TimeUnit.SECONDS)
 
         return AuthParam.PhoneAuthSession(
             effectiveSeconds=effectiveSeconds,
@@ -98,8 +100,8 @@ class AuthService (
         val phoneNumber = if(isMasterPhone) getOriginalPhone(data.phoneNumber) else data.phoneNumber
         logger.info("[SMS OTP] Challenged ${maskUtil.maskPhoneNumber(phoneNumber)} - ${data.otpCode}")
 
-        val ops = redisTemplate.opsForValue()
-        val code = ops.get(getSessionCache(phoneNumber))
+        val bucket:RBucket<String> = redisClient.getBucket(phoneNumber)
+        val code = bucket.get()
 
         if(code==null){
             logger.info("[SMS OTP] No Session ${maskUtil.maskPhoneNumber(phoneNumber)}")
@@ -113,14 +115,11 @@ class AuthService (
         logger.info("[SMS OTP] Succeed ${maskUtil.maskPhoneNumber(phoneNumber)}")
 
         try{
-            TODO("User find 로직 추가")
-
             throw Exception()
 
         }catch (e:Exception){
             if (e is Exception){} //유저 에러 생성 후 추가
             val token = jwtService.generateToken(JwtTypes.REGISTER,phoneNumber)
-
             return TokensResponse(
                 reason = TokenIssuedReason.REGISTERING,
                 accessToken = token,
@@ -128,7 +127,7 @@ class AuthService (
             )
         }
         finally {
-            ops.getAndDelete(getSessionCache(phoneNumber))
+            bucket.delete()
         }
     }
 
