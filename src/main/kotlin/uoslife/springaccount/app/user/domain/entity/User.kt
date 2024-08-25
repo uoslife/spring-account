@@ -7,6 +7,7 @@ import uoslife.springaccount.app.moderator.domain.entity.Moderators
 import uoslife.springaccount.app.verification.domain.entity.PortalAccounts
 import uoslife.springaccount.app.verification.domain.entity.Verifications
 import uoslife.springaccount.common.domain.config.TimeStamp
+import java.time.LocalDateTime
 
 @Entity
 @Table(name = "`user`")
@@ -39,6 +40,9 @@ class User(
 
     var avatarUrl: String? = avatarUrl
         protected set
+
+    @Column(name = "deleted_at")
+    var deletedAt: LocalDateTime? = null
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
     protected val mutableDevices: MutableList<Device> = mutableListOf()
