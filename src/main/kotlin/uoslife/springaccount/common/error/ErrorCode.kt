@@ -12,4 +12,8 @@ enum class ErrorCode(val code: String, val message: String, var status: Int) {
         "Internal Server Error.",
         HttpStatus.INTERNAL_SERVER_ERROR.value()
     ),
+
+    // User
+    USER_NOT_FOUND("U01", "User Not Found.", HttpStatus.NOT_FOUND.value()),
+
 }
