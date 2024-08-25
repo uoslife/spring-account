@@ -6,3 +6,7 @@ spring:
     version: 1.0.1
   banner:
     location: classpath:/app-banner.dat
+  data:
+    redis:
+      host: ${REDIS_HOST}
+      port: ${REDIS_PORT}
