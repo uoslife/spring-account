@@ -48,6 +48,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation("org.springframework.cloud:spring-cloud-starter-openfeign")
     developmentOnly("org.springframework.boot:spring-boot-devtools")
+    implementation("org.redisson:redisson-spring-boot-starter:3.18.0")
 
     // Kotlin
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
