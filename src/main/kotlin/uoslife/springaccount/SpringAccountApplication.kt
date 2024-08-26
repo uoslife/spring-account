@@ -6,7 +6,6 @@ import org.springframework.cache.annotation.EnableCaching
 
 @SpringBootApplication @EnableCaching class SpringAccountApplication
 
-
 fun main(args: Array<String>) {
     runApplication<SpringAccountApplication>(*args)
 }
