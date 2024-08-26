@@ -5,23 +5,21 @@ import org.springframework.security.authentication.AbstractAuthenticationToken
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.oauth2.jwt.Jwt
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter
+import uoslife.springaccount.common.security.jwt.MemberJwtToken
 import uoslife.springaccount.common.security.jwt.UosJwtGrantedAuthoritiesConverter
 
-abstract class SimpleJwtAuthenticationConverter : Converter<Jwt, AbstractAuthenticationToken> {
-    private val jwtAuthenticationConverter = JwtAuthenticationConverter()
-
-    init {
-        this.jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(UosJwtGrantedAuthoritiesConverter())
-    }
+class UosJwtAuthenticationConverter : Converter<Jwt, AbstractAuthenticationToken> {
+    private val uosJwtGrantedAuthoritiesConverter = UosJwtGrantedAuthoritiesConverter()
 
     override fun convert(jwt: Jwt): AbstractAuthenticationToken {
-        val token = jwtAuthenticationConverter.convert(jwt)
-        val authorities = token!!.authorities
-        return convert(jwt, authorities)
+        return convert(jwt, uosJwtGrantedAuthoritiesConverter.convert(jwt))
     }
 
-    abstract fun convert(
+    private fun convert(
         jwt: Jwt,
         authorities: Collection<GrantedAuthority?>?
-    ): AbstractAuthenticationToken
+    ): AbstractAuthenticationToken{
+        return MemberJwtToken(jwt, authorities)
+    }
+
 }
