@@ -17,8 +17,8 @@ class RedisConfig(
     @Bean
     fun redissonClient(): RedissonClient {
         val config = Config()
+        config.useSingleServer().address = "redis://$host:$port"
         config.setCodec(StringCodec.INSTANCE)
-            .useSingleServer().address = "redis://$host:$port"
         return Redisson.create(config)
     }
 }
