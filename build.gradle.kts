@@ -79,6 +79,11 @@ dependencies {
     testImplementation("io.kotest:kotest-assertions-core:${property("kotestVersion")}")
     testImplementation("io.kotest.extensions:kotest-extensions-spring:${property("kotestSpringVersion")}")
     testImplementation("com.ninja-squad:springmockk:4.0.2")
+
+    // Slack
+    implementation("com.slack.api:bolt:1.30.0")
+    implementation("com.slack.api:bolt-servlet:1.30.0")
+    implementation("com.slack.api:bolt-jetty:1.30.0")
 }
 
 dependencyManagement {
