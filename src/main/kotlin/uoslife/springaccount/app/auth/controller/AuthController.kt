@@ -1,73 +1,45 @@
 package uoslife.springaccount.app.auth.controller
 
-import org.slf4j.LoggerFactory
+import java.util.*
+import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
-import uoslife.springaccount.app.auth.dto.param.AuthParam
 import uoslife.springaccount.app.auth.dto.request.*
-import uoslife.springaccount.app.auth.dto.response.AuthResponse
+import uoslife.springaccount.app.auth.dto.response.AuthResponseDto
 import uoslife.springaccount.app.auth.service.AuthService
-import uoslife.springaccount.common.error.auth.InvalidTokenException
-import java.util.*
 
 @RestController
 @RequestMapping("/v2/auth")
 class AuthController(
     private val authService: AuthService,
 ) {
-    companion object {
-        private val logger = LoggerFactory.getLogger(AuthController::class.java)
-    }
     @PostMapping("/request")
     fun requestPhoneAuthentication(
-        @RequestBody data: PhoneAuthInitiateRequest
-    ): AuthResponse.PhoneAuthInitiateResponse {
-        try{
-            val result = authService.initiateOtpSession(PhoneAuthInitiateRequest.toParam(data))
+        @RequestBody data: AuthRequestDto.PhoneAuthInitiateRequest
+    ): AuthResponseDto.PhoneAuthInitiateResponse {
+        val result = authService.initiateOtpSession(data.toParam())
 
-            return AuthResponse.PhoneAuthInitiateResponse(result.expiresAt, result.effectiveSeconds)
-        }catch (e:Exception){
-            logger.error(e.message)
-            throw Exception()
-        }
+        return AuthResponseDto.PhoneAuthInitiateResponse.toResponse(result)
     }
 
     @PostMapping("/verify")
     fun verifyPhoneAuthentication(
-        @RequestBody data: PhoneAuthVerifyRequest,
-    ): AuthResponse.IssuedTokensResponse {
-        try{
-            val result = authService.verifyPhoneAuthSession(AuthParam.VerifyPhoneAuthSession(
-                phoneNumber = data.phoneNumber,
-                otpCode = data.code
-            ))
-            return AuthResponse.IssuedTokensResponse(
-                reason = result.reason,
-                accessToken = result.accessToken,
-                refreshToken = result.refreshToken
-            )
-        }catch (e:Exception){
+        @RequestBody data: AuthRequestDto.PhoneAuthVerifyRequest,
+    ): AuthResponseDto.IssuedTokensResponse {
+        val result = authService.verifyPhoneAuthSession(data.toParam())
 
-            logger.error(e.message)
-            throw Exception()
-        }
+        return AuthResponseDto.IssuedTokensResponse.toResponse(result)
     }
 
     @PostMapping("/refresh")
     fun refreshTokens(
-        @RequestBody data : RefreshTokensRequest
-    ) : AuthResponse.IssuedTokensResponse {
-        try {
-            val result = authService.refreshTokens(data.toParam())
+        @RequestBody data: AuthRequestDto.RefreshTokensRequest
+    ): AuthResponseDto.IssuedTokensResponse {
+        val result = authService.refreshTokens(data.toParam())
 
-            return result.toResponse()
-        }catch (e : Exception){
-            if (e is InvalidTokenException) throw InvalidTokenException()
-
-            logger.error(e.message)
-            throw Exception()
-        }
+        return AuthResponseDto.IssuedTokensResponse.toResponse(result)
     }
 }
