@@ -4,5 +4,5 @@ import org.springframework.data.jpa.repository.JpaRepository
 import uoslife.springaccount.app.identity.domain.entity.Identity
 
 interface IdentityRepository : JpaRepository<Identity, String> {
-    fun getUserIdentityList(uuid: String): List<Identity>?
+    fun findIdentityListByUuid(uuid: String): List<Identity>?
 }
