@@ -47,12 +47,14 @@ internal class MetaDataControllerTest(
                     mockMvc
                         .perform(request)
                         .andExpect(status().isOk)
-                        .andDocument("meta-data-get-realms",
+                        .andDocument(
+                            "meta-data-get-realms",
                             responseBody(
                                 "[].code" type STRING means "Realm 코드",
                                 "[].name" type STRING means "Realm 이름",
                                 "[].allowedDomains" type ARRAY means "허용 도메인"
-                            ))
+                            )
+                        )
                 }
             }
         }
