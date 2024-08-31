@@ -1,4 +1,4 @@
-package uoslife.springaccount.app.auth.dto.response
+package uoslife.springaccount.app.metadata.dto.response
 
 data class RealmProfileResponse(
     val code: String,

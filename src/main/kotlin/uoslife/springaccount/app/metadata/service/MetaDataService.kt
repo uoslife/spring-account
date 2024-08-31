@@ -1,9 +1,9 @@
-package uoslife.springaccount.app.auth.service
+package uoslife.springaccount.app.metadata.service
 
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import uoslife.springaccount.app.auth.domain.Realm
-import uoslife.springaccount.app.auth.dto.response.RealmProfileResponse
+import uoslife.springaccount.app.metadata.domain.Realm
+import uoslife.springaccount.app.metadata.dto.response.RealmProfileResponse
 
 @Service
 @Transactional(readOnly = true)

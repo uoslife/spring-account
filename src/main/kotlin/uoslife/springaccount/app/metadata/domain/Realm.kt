@@ -1,4 +1,4 @@
-package uoslife.springaccount.app.auth.domain
+package uoslife.springaccount.app.metadata.domain
 
 enum class Realm(val code: String, val koreanName: String, val allowedDomains: List<String>) {
     UOS("UOS", "서울시립대학교", listOf("uos.ac.kr")),
