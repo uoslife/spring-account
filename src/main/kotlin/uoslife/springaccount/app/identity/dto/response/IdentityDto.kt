@@ -3,7 +3,7 @@ package uoslife.springaccount.app.identity.dto.response
 import uoslife.springaccount.app.identity.domain.entity.Identity
 
 class IdentityDto {
-    data class IdentityReponse (
+    data class IdentityResponse (
         val type: String,
         val status: String,
         val idNumber: String,
@@ -14,8 +14,8 @@ class IdentityDto {
     )
 
     companion object {
-        fun toResponse(identity : Identity) : IdentityReponse{
-            return IdentityReponse(
+        fun toResponse(identity : Identity) : IdentityResponse{
+            return IdentityResponse(
                 type = identity.type,
                 status = identity.status,
                 idNumber = identity.idNumber,
@@ -24,6 +24,10 @@ class IdentityDto {
                 major = identity.major,
                 isActive = identity.isActive,
                 )
+        }
+
+        fun toResponseIdentityList (identityList: List<Identity>?): List<IdentityDto.IdentityResponse>? {
+            return identityList?.map { toResponse(it) }
         }
     }
 }
