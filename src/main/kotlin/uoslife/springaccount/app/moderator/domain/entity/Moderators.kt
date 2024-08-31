@@ -4,22 +4,6 @@ import jakarta.persistence.*
 import uoslife.springaccount.app.user.domain.entity.User
 import uoslife.springaccount.common.domain.config.TimeStamp
 
-//
-// CREATE TABLE "moderators" (
-// "id" BIGSERIAL NOT NULL,
-// "user_id" BIGINT NOT NULL,
-// "real_name" TEXT NOT NULL,
-// "email" TEXT NOT NULL,
-// "generation" TEXT NOT NULL,
-// "phone_number" TEXT NOT NULL,
-// "student_number" TEXT NOT NULL,
-// "chapter" TEXT NOT NULL,
-// "role" TEXT NOT NULL,
-// "updated_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-// "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-//
-// CONSTRAINT "moderators_pkey" PRIMARY KEY ("id")
-// );
 @Entity
 @Table(name = "`moderators`")
 class Moderators(
