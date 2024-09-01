@@ -38,10 +38,11 @@ class UserController(private val userService: UserService) {
         @AuthenticationPrincipal userDetails: UserDetails, // TODO register token 사용 방법 확인 필요
         @Valid request: RegisterDto,
     ) {
-        val data = CreateUserDto(
-            nickname = request.nickname,
-            phoneNumber = "01012345678", // TODO token에서 정보 가져오기
-        )
+        val data =
+            CreateUserDto(
+                nickname = request.nickname,
+                phoneNumber = "01012345678", // TODO token에서 정보 가져오기
+            )
 
         val user = userService.registerUser(data)
     }
