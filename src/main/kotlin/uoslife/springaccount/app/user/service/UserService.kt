@@ -41,4 +41,12 @@ class UserService(
     private fun getProfileCacheKey(userId: Long): String {
         return "uoslife:user:profile:$userId"
     }
+
+    private fun isPhoneNumberDuplicated(phoneNumber: String): Boolean {
+        return userRepository.existsByPhoneNumber(phoneNumber)
+    }
+
+    private fun isNicknameDuplicated(nickname: String): Boolean {
+        return userRepository.existsByNicknameAndDeletedAtIsNull(nickname)
+    }
 }
