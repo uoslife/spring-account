@@ -41,7 +41,9 @@ class User(
     var avatarUrl: String? = avatarUrl
         protected set
 
-    @Column(name = "deleted_at") var deletedAt: LocalDateTime? = null
+    @Column(name = "deleted_at")
+    var deletedAt: LocalDateTime? = null
+        protected set
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
     protected val mutableDevices: MutableList<Device> = mutableListOf()
@@ -86,5 +88,10 @@ class User(
 
     fun addIdentity(identity: Identity) {
         mutableIdentities.add(identity)
+    }
+
+    fun restoreUser(nickname: String) {
+        this.nickname = nickname
+        this.deletedAt = null
     }
 }
