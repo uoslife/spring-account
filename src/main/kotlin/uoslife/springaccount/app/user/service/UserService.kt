@@ -5,6 +5,7 @@ import org.redisson.api.RBucket
 import org.redisson.api.RedissonClient
 import org.springframework.stereotype.Service
 import uoslife.springaccount.app.user.domain.repository.jpa.UserRepository
+import uoslife.springaccount.app.user.dto.param.CreateUserDto
 import uoslife.springaccount.app.user.dto.response.UserProfileDto
 import uoslife.springaccount.app.user.util.UserConfig
 import uoslife.springaccount.common.error.user.UserNotFoundException
@@ -36,6 +37,32 @@ class UserService(
         bucket.set(userProfileResponse, UserConfig.USER_PROFILE_CACHE_TTL, TimeUnit.SECONDS)
 
         return userProfileResponse
+    }
+
+    fun registerUser(data: CreateUserDto) {
+        // TODO 회원 여부 확인
+
+        // TODO 닉네임 중복체크
+        if (isNicknameDuplicated(data.nickname)) {
+            // throw exception
+        }
+
+        // 탈퇴 후 재가입 여부 확인
+        val deactivatedUser =
+            userRepository.findByPhoneNumberAndDeletedAtIsNotNull(data.phoneNumber)
+
+        // 재가입하는 경우 기존 정보 업데이트
+        if (deactivatedUser != null) {
+            deactivatedUser.restoreUser(data.nickname)
+            userRepository.save(deactivatedUser)
+        }
+
+        // TODO 전화번호 중복체크
+
+        // TODO 토큰 발급(access, refresh)
+
+        // TODO 토큰 반환
+
     }
 
     private fun getProfileCacheKey(userId: Long): String {
