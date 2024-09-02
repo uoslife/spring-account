@@ -4,6 +4,7 @@ import java.util.concurrent.TimeUnit
 import org.redisson.api.RBucket
 import org.redisson.api.RedissonClient
 import org.springframework.stereotype.Service
+import uoslife.springaccount.app.user.domain.entity.User
 import uoslife.springaccount.app.user.domain.repository.jpa.UserRepository
 import uoslife.springaccount.app.user.dto.param.CreateUserDto
 import uoslife.springaccount.app.user.dto.response.UserProfileDto
@@ -39,8 +40,12 @@ class UserService(
         return userProfileResponse
     }
 
-    fun registerUser(data: CreateUserDto) {
-        // TODO 회원 여부 확인
+    fun registerUser(data: CreateUserDto): User {
+        // 회원 여부 확인
+        val activeUser = userRepository.findByPhoneNumberAndDeletedAtIsNull(data.phoneNumber)
+        if (activeUser != null) {
+            return activeUser
+        }
 
         // TODO 닉네임 중복체크
         if (isNicknameDuplicated(data.nickname)) {
@@ -48,21 +53,17 @@ class UserService(
         }
 
         // 탈퇴 후 재가입 여부 확인
-        val deactivatedUser =
-            userRepository.findByPhoneNumberAndDeletedAtIsNotNull(data.phoneNumber)
+        val inactiveUser = userRepository.findByPhoneNumberAndDeletedAtIsNotNull(data.phoneNumber)
 
         // 재가입하는 경우 기존 정보 업데이트
-        if (deactivatedUser != null) {
-            deactivatedUser.restoreUser(data.nickname)
-            userRepository.save(deactivatedUser)
+        if (inactiveUser != null) {
+            inactiveUser.restoreUser(data.nickname)
+            userRepository.save(inactiveUser)
+            return inactiveUser
         }
 
-        // TODO 전화번호 중복체크
-
-        // TODO 토큰 발급(access, refresh)
-
-        // TODO 토큰 반환
-
+        // 최초가입하는 경우 정보 저장
+        return createUser(data)
     }
 
     private fun getProfileCacheKey(userId: Long): String {
@@ -75,5 +76,11 @@ class UserService(
 
     private fun isNicknameDuplicated(nickname: String): Boolean {
         return userRepository.existsByNicknameAndDeletedAtIsNull(nickname)
+    }
+
+    private fun createUser(data: CreateUserDto): User {
+        val newUser = User(data.nickname, data.phoneNumber)
+        userRepository.save(newUser)
+        return newUser
     }
 }
