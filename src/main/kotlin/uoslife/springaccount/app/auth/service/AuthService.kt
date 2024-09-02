@@ -120,7 +120,7 @@ class AuthService (
             "[SMS OTP] Challenged ${maskUtil.maskPhoneNumber(phoneNumber)} - ${data.otpCode}"
         )
 
-        val bucket: RBucket<String> = redisClient.getBucket(phoneNumber)
+        val bucket: RBucket<String> = redisClient.getBucket(getSessionCache(phoneNumber))
         val code = bucket.get()
 
         if (code == null) {
