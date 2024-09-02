@@ -12,17 +12,16 @@ import uoslife.springaccount.common.domain.config.TimeStamp
 @Entity
 @Table(name = "`user`")
 class User(
-    name: String,
+    nickname: String,
     phoneNumber: String,
+    name: String? = null,
     email: String? = null,
-    nickname: String? = null,
     birthday: String? = null,
     avatarUrl: String? = null,
 ) : TimeStamp() {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY) val id: Long? = null
 
-    @Column(nullable = false)
-    var name: String = name
+    var name: String? = name
         protected set
 
     @Column(name = "phone_number", nullable = false)
@@ -32,7 +31,8 @@ class User(
     var email: String? = email
         protected set
 
-    var nickname: String? = nickname
+    @Column(nullable = false)
+    var nickname: String = nickname
         protected set
 
     var birthday: String? = birthday
