@@ -45,10 +45,9 @@ class UserController(private val userService: UserService) {
             )
 
         val user = userService.registerUser(data)
+
+        // TODO 토큰 발급(access, refresh)
+
+        // TODO 토큰 반환
     }
-
-    // TODO 토큰 발급
-
-    // TODO 토큰 반환
-
 }
