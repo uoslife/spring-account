@@ -8,4 +8,5 @@ interface UserRepository : JpaRepository<User, Long> {
     fun findByPhoneNumberAndDeletedAtIsNotNull(phoneNumber: String): User?
     fun existsByPhoneNumber(phoneNumber: String): Boolean
     fun existsByNicknameAndDeletedAtIsNull(nickname: String): Boolean
+    fun findByPhoneNumberAndDeletedAtIsNull(phoneNumber: String): User?
 }
