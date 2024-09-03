@@ -87,4 +87,8 @@ class User(
     fun addIdentity(identity: Identity) {
         mutableIdentities.add(identity)
     }
+
+    fun updateUserProfile(nickname: String) {
+        this.nickname = nickname
+    }
 }
