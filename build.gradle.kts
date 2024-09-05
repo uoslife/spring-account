@@ -79,6 +79,10 @@ dependencies {
     testImplementation("io.kotest:kotest-assertions-core:${property("kotestVersion")}")
     testImplementation("io.kotest.extensions:kotest-extensions-spring:${property("kotestSpringVersion")}")
     testImplementation("com.ninja-squad:springmockk:4.0.2")
+
+    // AWS
+    implementation("software.amazon.awssdk:sts:2.27.18")
+    implementation("software.amazon.awssdk:ses:2.27.18")
 }
 
 dependencyManagement {
