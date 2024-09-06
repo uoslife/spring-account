@@ -19,11 +19,11 @@ import uoslife.springaccount.intrastructure.externalservice.sms.service.SmsServi
 import uoslife.springaccount.intrastructure.utils.MaskUtil
 
 @Service
-class AuthService (
+class AuthService(
     private val redisClient: RedissonClient,
     private val jwtService: JwtService,
     private val slackService: SlackService,
-    private val smsService:SmsService
+    private val smsService: SmsService
 ) {
     companion object {
         private val logger = LoggerFactory.getLogger(AuthService::class.java)
@@ -68,7 +68,7 @@ class AuthService (
     private fun sendSlackMessage(code: String, channel: String): Boolean {
         slackService.sendMessage(
             text = "시대생 인증번호는 `${code}` 입니다.\n@uoslife.com #${code}",
-            channel=channel
+            channel = channel
         )
         return true
     }

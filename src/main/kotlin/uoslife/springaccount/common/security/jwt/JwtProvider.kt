@@ -13,32 +13,26 @@ import java.util.*
 
 class JwtProvider(private val secretKey: String) {
 
-
     @Throws(Exception::class)
-    fun generateAccessToken(sub:String, expirationTime: Duration?): String {
+    fun generateAccessToken(sub: String, expirationTime: Duration?): String {
         return generateToken(sub, expirationTime, JwtConfig.SCOPE_ACCESS)
     }
 
     @Throws(Exception::class)
-    fun generateRefreshToken(sub:String, expirationTime: Duration?): String {
+    fun generateRefreshToken(sub: String, expirationTime: Duration?): String {
         return generateToken(sub, expirationTime, JwtConfig.SCOPE_REFRESH)
     }
 
     @Throws(Exception::class)
-    fun generateRegisterToken(sub:String, expirationTime: Duration?):String{
+    fun generateRegisterToken(sub: String, expirationTime: Duration?): String {
         return generateToken(sub, expirationTime, JwtConfig.SCOPE_REGISTER)
     }
 
     @Throws(Exception::class)
-    private fun generateToken(
-        subClaim:String,
-        expirationTime: Duration?,
-        jti: String
-    ): String {
+    private fun generateToken(subClaim: String, expirationTime: Duration?, jti: String): String {
         val signer: JWSSigner = MACSigner(secretKey)
 
         val builder = JWTClaimsSet.Builder()
-
 
         val claimsSet =
             builder

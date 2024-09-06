@@ -1,19 +1,17 @@
 package uoslife.springaccount.app.auth.util
 
-import java.util.Date
-
 data class JwtPayload(
-    val iss:String,
+    val iss: String,
     val aud: String,
-//    val scp: String,
+    //    val scp: String,
     val sub: String,
-//    val nbf: Int,
+    //    val nbf: Int,
     val iat: Long,
     val exp: Long,
-){
+) {
     companion object {
         fun toPayload(claims: MutableMap<String, Any>): JwtPayload {
-            val audList= claims["aud"] as List<String>
+            val audList = claims["aud"] as List<String>
             val aud = audList[0].split("/").last()
             val iat = claims["iat"] as java.time.Instant
             val exp = claims["exp"] as java.time.Instant

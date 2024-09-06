@@ -22,9 +22,7 @@ class UosJwtGrantedAuthoritiesConverter : Converter<Jwt, Collection<GrantedAutho
         return authorities
     }
 
-    private fun removeClaimPrefix(
-        authClaim:String
-    ):String {
+    private fun removeClaimPrefix(authClaim: String): String {
         val authClaimString = authClaim.removePrefix("[").removeSuffix("]")
         return authClaimString.drop("${JwtConfig.ISSUER_PREFIX}/".length)
     }

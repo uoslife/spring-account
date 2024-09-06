@@ -14,6 +14,6 @@ enum class ErrorCode(val code: String, val message: String, var status: Int) {
     ),
 
     // Auth
-    INVALID_TOKEN_VALUE("A01","Invalid Token Value.", HttpStatus.BAD_REQUEST.value()),
+    INVALID_TOKEN_VALUE("A01", "Invalid Token Value.", HttpStatus.BAD_REQUEST.value()),
     TOKEN_EXPIRED_ERROR("A02", "Expired Token.", HttpStatus.UNAUTHORIZED.value())
 }

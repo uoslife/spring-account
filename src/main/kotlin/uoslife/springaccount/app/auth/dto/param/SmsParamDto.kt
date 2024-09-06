@@ -10,13 +10,9 @@ class SmsParamDto {
         val receiver: List<Receiver>
     )
 
-    data class Receiver(
-        val mobile: String
-    )
+    data class Receiver(val mobile: String)
 
-    data class SmsSendResult(
-        val status: String
-    ) {
+    data class SmsSendResult(val status: String) {
         fun isSuccess(): Boolean {
             return status == "0"
         }

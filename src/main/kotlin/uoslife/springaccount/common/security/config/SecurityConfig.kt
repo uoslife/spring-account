@@ -30,11 +30,9 @@ class SecurityConfig(
         httpSecurity: HttpSecurity,
     ): SecurityFilterChain {
         httpSecurity.invoke {
-            csrf{disable()}
-            logout{disable()}
-            sessionManagement {
-                sessionCreationPolicy = SessionCreationPolicy.STATELESS
-            }
+            csrf { disable() }
+            logout { disable() }
+            sessionManagement { sessionCreationPolicy = SessionCreationPolicy.STATELESS }
             authorizeRequests {
                 authorize("/v2/auth/**", permitAll)
                 authorize("/v2/users", hasRole("REGISTER"))
