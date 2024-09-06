@@ -15,13 +15,15 @@ import uoslife.springaccount.app.moderator.domain.entity.Moderators
 import uoslife.springaccount.common.error.auth.InvalidTokenException
 import uoslife.springaccount.common.error.auth.OtpNotFoundException
 import uoslife.springaccount.intrastructure.externalservice.slack.SlackService
+import uoslife.springaccount.intrastructure.externalservice.sms.service.SmsService
 import uoslife.springaccount.intrastructure.utils.MaskUtil
 
 @Service
 class AuthService (
     private val redisClient: RedissonClient,
     private val jwtService: JwtService,
-    private val slackService: SlackService
+    private val slackService: SlackService,
+    private val smsService:SmsService
 ) {
     companion object {
         private val logger = LoggerFactory.getLogger(AuthService::class.java)
@@ -76,8 +78,11 @@ class AuthService (
     }
 
     private fun sendMessage(code: String, phoneNumber: String): Boolean {
-        return true
-        TODO("Not yet implemented")
+        return smsService.sendMessage(
+            phoneNumber,
+            "시대생 인증번호",
+            "시대생 인증번호는 [${code}] 입니다.\n@uoslife.com #${code}",
+        )
     }
 
     private fun checkModerator(phoneNumber: String): Moderators? {

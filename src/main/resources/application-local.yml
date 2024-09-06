@@ -30,15 +30,6 @@ security:
   jwt:
     secret: ${JWT_ACCESS_SECRET}
 
-
-logging:
-  level:
-    org:
-      springframework:
-        security:
-          DEBUG
-
-
 slack:
   bot-token: ${SLACK_BOT_TOKEN}
   signing-secret: ${SLACK_SIGNING_SECRET}
@@ -47,3 +38,10 @@ slack:
 app:
   env:
     ${APPLICATION_PROFILE}
+
+sms:
+  api:
+    endpoint: ${SMS_API_ENDPOINT}
+    sender: ${SMS_API_SENDER}
+    accessKeyId: ${SMS_API_ACCESS_KEY_ID}
+    accessKeySecret: ${SMS_API_ACCESS_KEY_SECRET}
