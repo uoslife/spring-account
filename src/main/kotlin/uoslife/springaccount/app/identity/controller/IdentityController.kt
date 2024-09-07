@@ -27,11 +27,12 @@ class IdentityController(private val identityService: IdentityService) {
 
         val result = identityService.selectRepresentativeIdentityFromList(userId)
 
+        return ResponseEntity.ok(result)
         //TODO: identityList가 1개인 경우, 응답값 반환에 대한 고민 필요.
-        return if (result == null) {
-            ResponseEntity.ok("수정할 필요가 없습니다.");
-        } else {
-            ResponseEntity.ok(result)
-        }
+//        return if (result == null) {
+//            ResponseEntity.ok("수정할 필요가 없습니다.");
+//        } else {
+//            ResponseEntity.ok(result)
+//        }
     }
 }
