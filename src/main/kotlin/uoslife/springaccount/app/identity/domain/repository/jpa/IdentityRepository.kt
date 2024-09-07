@@ -8,8 +8,10 @@ import uoslife.springaccount.app.identity.domain.entity.Identity
 interface IdentityRepository : JpaRepository<Identity, String> {
     fun findIdentitiesByUserId(userId: Long): List<Identity>?
 
+    fun findByUserId(userId: Long): List<Identity>?
+
     // 추후 queryDsl로 변경 예정.
     @Modifying
-    @Query("UPDATE Identity i SET i.isActive = CASE WHEN i.id = :identityId THEN true ELSE false END WHERE i.userId = :userId")
-    fun updateActiveIdentityList(identityId:String)
+    @Query("UPDATE Identity i SET i.isActive = CASE WHEN i.id = :identityId THEN true ELSE false END WHERE i.user.id = :userId")
+    fun updateActiveIdentityList(identityId: String, userId: Long)
 }
