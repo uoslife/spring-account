@@ -38,6 +38,24 @@ class UserService(
         return userProfileResponse
     }
 
+    fun updateProfile(data: UpdateUserDto): UserProfileDto.UserProfileResponse {
+
+        // TODO nickname 중복 검사
+
+        // DB에서 유저 조회
+        val user =
+            userRepository.findByIdAndDeletedAtIsNull(data.userId) ?: throw UserNotFoundException()
+
+        // 유저 정보 수정
+        if (data.nickname != null) {
+            user.updateUserProfile(data.nickname)
+            userRepository.save(user)
+        }
+
+        // TODO user entity DTO로 변환
+
+    }
+
     private fun getProfileCacheKey(userId: Long): String {
         return "uoslife:user:profile:$userId"
     }
