@@ -7,5 +7,5 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtAut
 class MemberJwtToken(jwt: Jwt, authorities: Collection<GrantedAuthority?>?) :
     JwtAuthenticationToken(jwt, authorities) {
 
-    val memberId: Long = jwt.getClaimAsString("member_id")!!.toLong()
+    val userId: Long = jwt.getClaimAsString("sub")!!.toLong()
 }

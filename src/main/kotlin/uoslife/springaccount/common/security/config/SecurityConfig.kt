@@ -8,13 +8,14 @@ import org.springframework.context.annotation.Configuration
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.config.annotation.web.invoke
+import org.springframework.security.config.http.SessionCreationPolicy
 import org.springframework.security.oauth2.jose.jws.MacAlgorithm
 import org.springframework.security.oauth2.jwt.JwtDecoder
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder
 import org.springframework.security.web.SecurityFilterChain
 import uoslife.springaccount.common.security.authentication.JwtAccessDeniedHandler
 import uoslife.springaccount.common.security.authentication.JwtEntryPoint
-import uoslife.springaccount.common.security.authentication.SimpleJwtAuthenticationConverter
+import uoslife.springaccount.common.security.authentication.UosJwtAuthenticationConverter
 import uoslife.springaccount.common.security.jwt.JwtProvider
 
 @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)
@@ -27,14 +28,20 @@ class SecurityConfig(
     @Bean
     fun jwtChain(
         httpSecurity: HttpSecurity,
-        simpleJwtAuthenticationConverter: SimpleJwtAuthenticationConverter,
     ): SecurityFilterChain {
         httpSecurity.invoke {
-            authorizeRequests { authorize(anyRequest, authenticated) }
+            csrf { disable() }
+            logout { disable() }
+            sessionManagement { sessionCreationPolicy = SessionCreationPolicy.STATELESS }
+            authorizeRequests {
+                authorize("/v2/auth/**", permitAll)
+                authorize("/v2/users", hasRole("REGISTER"))
+                authorize(anyRequest, hasRole("ACCESS"))
+            }
             oauth2ResourceServer {
                 accessDeniedHandler = JwtAccessDeniedHandler()
                 authenticationEntryPoint = JwtEntryPoint()
-                jwt { jwtAuthenticationConverter = simpleJwtAuthenticationConverter }
+                jwt { jwtAuthenticationConverter = UosJwtAuthenticationConverter() }
             }
         }
         return httpSecurity.build()

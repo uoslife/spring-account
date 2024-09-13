@@ -1,4 +1,9 @@
 spring:
+  data:
+    redis:
+      host: ${REDIS_HOST}
+      port: ${REDIS_PORT}
+
   config:
     activate:
       on-profile: local
@@ -20,4 +25,23 @@ spring:
         format_sql: true
         use_sql_comments: true
 
-security.jwt.secret: secret
+
+security:
+  jwt:
+    secret: ${JWT_ACCESS_SECRET}
+
+slack:
+  bot-token: ${SLACK_BOT_TOKEN}
+  signing-secret: ${SLACK_SIGNING_SECRET}
+  app-token: ${SLACK_APP_TOKEN}
+
+app:
+  env:
+    ${APPLICATION_PROFILE}
+
+sms:
+  api:
+    endpoint: ${SMS_API_ENDPOINT}
+    sender: ${SMS_API_SENDER}
+    accessKeyId: ${SMS_API_ACCESS_KEY_ID}
+    accessKeySecret: ${SMS_API_ACCESS_KEY_SECRET}
