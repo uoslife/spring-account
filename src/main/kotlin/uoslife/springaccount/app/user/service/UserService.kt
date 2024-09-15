@@ -5,6 +5,7 @@ import org.redisson.api.RBucket
 import org.redisson.api.RedissonClient
 import org.springframework.stereotype.Service
 import uoslife.springaccount.app.user.domain.repository.jpa.UserRepository
+import uoslife.springaccount.app.user.dto.param.UpdateUserDto
 import uoslife.springaccount.app.user.dto.response.UserProfileDto
 import uoslife.springaccount.app.user.util.UserConfig
 import uoslife.springaccount.common.error.user.UserNotFoundException
@@ -41,6 +42,9 @@ class UserService(
     fun updateProfile(data: UpdateUserDto): UserProfileDto.UserProfileResponse {
 
         // TODO nickname 중복 검사
+        if (isNicknameDuplicated(data.nickname!!)) {
+            // throw exception
+        }
 
         // DB에서 유저 조회
         val user =
@@ -58,5 +62,9 @@ class UserService(
 
     private fun getProfileCacheKey(userId: Long): String {
         return "uoslife:user:profile:$userId"
+    }
+
+    private fun isNicknameDuplicated(nickname: String): Boolean {
+        return userRepository.existsByNicknameAndDeletedAtIsNull(nickname)
     }
 }

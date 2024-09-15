@@ -5,4 +5,5 @@ import uoslife.springaccount.app.user.domain.entity.User
 
 interface UserRepository : JpaRepository<User, Long> {
     fun findByIdAndDeletedAtIsNull(id: Long): User?
+    fun existsByNicknameAndDeletedAtIsNull(nickname: String): Boolean
 }
