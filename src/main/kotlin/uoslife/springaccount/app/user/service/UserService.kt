@@ -56,7 +56,12 @@ class UserService(
             userRepository.save(user)
         }
 
-        // TODO user entity DTO로 변환
+        // user entity DTO로 변환
+        val userProfileResponse = UserProfileDto.toUserProfileResponse(user)
+
+        // TODO redis 캐시 수정
+
+        return userProfileResponse
 
     }
 
