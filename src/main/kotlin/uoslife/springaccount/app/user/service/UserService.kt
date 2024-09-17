@@ -59,10 +59,12 @@ class UserService(
         // user entity DTO로 변환
         val userProfileResponse = UserProfileDto.toUserProfileResponse(user)
 
-        // TODO redis 캐시 수정
+        // 캐시 업데이트
+        val cacheKey = getProfileCacheKey(user.id!!)
+        val bucket: RBucket<UserProfileDto.UserProfileResponse> = redisClient.getBucket(cacheKey)
+        bucket.set(userProfileResponse, UserConfig.USER_PROFILE_CACHE_TTL, TimeUnit.SECONDS)
 
         return userProfileResponse
-
     }
 
     private fun getProfileCacheKey(userId: Long): String {
