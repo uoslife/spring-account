@@ -1,6 +1,7 @@
 package uoslife.springaccount.app.user.domain.entity
 
 import jakarta.persistence.*
+import java.time.LocalDateTime
 import uoslife.springaccount.app.device.domain.entity.Device
 import uoslife.springaccount.app.identity.domain.entity.Identity
 import uoslife.springaccount.app.moderator.domain.entity.Moderators
@@ -39,6 +40,8 @@ class User(
 
     var avatarUrl: String? = avatarUrl
         protected set
+
+    @Column(name = "deleted_at") var deletedAt: LocalDateTime? = null
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
     protected val mutableDevices: MutableList<Device> = mutableListOf()

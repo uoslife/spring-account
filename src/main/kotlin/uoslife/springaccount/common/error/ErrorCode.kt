@@ -15,5 +15,9 @@ enum class ErrorCode(val code: String, val message: String, var status: Int) {
 
     // Auth
     INVALID_TOKEN_VALUE("A01", "Invalid Token Value.", HttpStatus.BAD_REQUEST.value()),
-    TOKEN_EXPIRED_ERROR("A02", "Expired Token.", HttpStatus.UNAUTHORIZED.value())
+    TOKEN_EXPIRED_ERROR("A02", "Expired Token.", HttpStatus.UNAUTHORIZED.value()),
+
+    // User
+    USER_NOT_FOUND("U01", "User Not Found.", HttpStatus.NOT_FOUND.value()),
+    USER_ID_NULL("U02", "User ID is Null", HttpStatus.INTERNAL_SERVER_ERROR.value()),
 }
