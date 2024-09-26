@@ -26,3 +26,8 @@ spring:
         default_batch_fetch_size: 1000
         show_sql: true
         format_sql: true
+
+security:
+  jwt:
+    secret:
+      ${JWT_ACCESS_SECRET}

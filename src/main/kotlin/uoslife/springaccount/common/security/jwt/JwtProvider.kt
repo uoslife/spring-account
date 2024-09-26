@@ -14,28 +14,25 @@ import java.util.*
 class JwtProvider(private val secretKey: String) {
 
     @Throws(Exception::class)
-    fun generateAccessToken(claims: Map<String, Any>, expirationTime: Duration?): String {
-        return generateToken(claims, expirationTime, SCOPE_ACCESS)
+    fun generateAccessToken(sub: String, expirationTime: Duration?): String {
+        return generateToken(sub, expirationTime, JwtConfig.SCOPE_ACCESS)
     }
 
     @Throws(Exception::class)
-    fun generateRefreshToken(expirationTime: Duration?): String {
-        return generateToken(emptyMap(), expirationTime, SCOPE_REFRESH)
+    fun generateRefreshToken(sub: String, expirationTime: Duration?): String {
+        return generateToken(sub, expirationTime, JwtConfig.SCOPE_REFRESH)
     }
 
     @Throws(Exception::class)
-    private fun generateToken(
-        claims: Map<String, Any>,
-        expirationTime: Duration?,
-        jti: String
-    ): String {
+    fun generateRegisterToken(sub: String, expirationTime: Duration?): String {
+        return generateToken(sub, expirationTime, JwtConfig.SCOPE_REGISTER)
+    }
+
+    @Throws(Exception::class)
+    private fun generateToken(subClaim: String, expirationTime: Duration?, jti: String): String {
         val signer: JWSSigner = MACSigner(secretKey)
 
         val builder = JWTClaimsSet.Builder()
-
-        for (key in claims.keys) {
-            builder.claim(key, claims[key])
-        }
 
         val claimsSet =
             builder
@@ -44,7 +41,9 @@ class JwtProvider(private val secretKey: String) {
                     else Date.from(Instant.now().plus(expirationTime))
                 )
                 .issueTime(Date())
-                .claim("scp", jti)
+                .claim("iss", JwtConfig.ISSUER_PREFIX)
+                .claim("aud", "${JwtConfig.ISSUER_PREFIX}/$jti")
+                .claim("sub", subClaim)
                 .build()
         val signedJWT =
             SignedJWT(
@@ -54,10 +53,5 @@ class JwtProvider(private val secretKey: String) {
         signedJWT.sign(signer)
 
         return signedJWT.serialize()
-    }
-
-    companion object {
-        const val SCOPE_ACCESS: String = "acc"
-        const val SCOPE_REFRESH: String = "ref"
     }
 }
