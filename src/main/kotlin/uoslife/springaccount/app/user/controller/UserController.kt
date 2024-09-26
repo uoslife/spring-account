@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import uoslife.springaccount.app.user.dto.response.UserProfileDto
 import uoslife.springaccount.app.user.service.UserService
+import uoslife.springaccount.common.security.annotation.UserId
 
 @RestController
 @RequestMapping("/v2/user")
@@ -16,9 +17,8 @@ class UserController(private val userService: UserService) {
 
     @GetMapping("/me")
     fun getMyProfile(
-        @AuthenticationPrincipal userDetails: UserDetails
+        @UserId userId: Long
     ): ResponseEntity<UserProfileDto.UserProfileResponse> {
-        val userId = userDetails.username.toLong()
         return ResponseEntity.ok(userService.getProfile(userId))
     }
 
